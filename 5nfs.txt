@@ -1,0 +1,22 @@
+# On Server VM:
+sudo apt-get update
+sudo apt-get install -y nfs-kernel-server
+sudo mkdir -p /srv/nfs/shared
+sudo chown nobody:nogroup /srv/nfs/shared
+echo "/srv/nfs/shared 192.168.100.0/24(rw,sync,no_subtree_check)" | sudo tee -a /etc/exports
+sudo chmod 777 /srv/nfs/shared
+sudo exportfs -ra
+sudo systemctl restart nfs-kernel-server
+
+
+# On Client VM:
+sudo apt-get update
+sudo apt-get install -y nfs-common
+sudo mkdir -p /mnt/nfs/shared
+sudo mount SERVER_IP:/srv/nfs/shared /mnt/nfs/shared
+ls -l /mnt/nfs/shared
+touch /mnt/nfs/shared/myfile.txt
+
+
+#check on server
+ls -l /srv/nfs/shared

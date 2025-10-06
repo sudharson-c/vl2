@@ -1,0 +1,17 @@
+# Linux Bridge – Temporary (commands; does not persist across reboot)
+sudo -s
+apt-get update
+apt-get install -y bridge-utils
+
+brctl addbr br-cloud
+brctl addif br-cloud enp0s3
+ip addr flush dev enp0s3
+ip addr add 10.0.2.15/24 dev br-cloud
+ip link set enp0s3 up
+ip link set br-cloud up
+ip route add default via 10.0.2.2
+
+ip a
+route -n
+brctl show
+

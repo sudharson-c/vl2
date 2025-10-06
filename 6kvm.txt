@@ -1,0 +1,31 @@
+# KVM installation and checks (Ubuntu)
+
+# 0) Verify CPU virtualization and 64-bit capability
+egrep -c '(vmx|svm)' /proc/cpuinfo
+egrep -c ' lm ' /proc/cpuinfo
+uname -m
+
+# 1) Install KVM and management tools
+sudo apt-get update
+# Newer Ubuntu:
+sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager qemu-system
+# If on older Ubuntu and the above fails, also try:
+sudo apt-get install -y libvirt-bin || true
+
+# 2) Enable services and group membership
+sudo systemctl enable --now libvirtd || sudo systemctl enable --now libvirt-bin
+sudo usermod -aG kvm,libvirt $USER
+# Re-login or:
+newgrp kvm </dev/null
+newgrp libvirt </dev/null
+
+# 3) virsh checks
+virsh --version
+virsh version
+virsh list
+virsh nodeinfo
+
+# 4) Launch virt-manager for GUI VM creation/import
+# Import an existing disk image: File → New VM → Import existing disk image
+virt-manager
+

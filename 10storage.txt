@@ -1,0 +1,29 @@
+# Experiment 10 — Storage virtualization with LVM
+
+## After adding a new virtual disk in VirtualBox (e.g., 10G attached as /dev/sdb), inside the VM:
+sudo -s
+
+## Identify the new disk
+fdisk -l   # find /dev/sdb (or as detected)
+
+## Inspect current LVM (optional)
+pvdisplay
+vgdisplay
+lvdisplay
+
+## Create PV, VG, and LV (adjust names/sizes)
+pvcreate /dev/sdb
+vgcreate ubuntu-vg /dev/sdb
+lvcreate -L 5G -n ubuntu-lv ubuntu-vg
+
+## Make filesystem and mount
+mkfs.ext4 /dev/ubuntu-vg/ubuntu-lv
+mkdir -p /mnt/lvm-demo
+mount /dev/ubuntu-vg/ubuntu-lv /mnt/lvm-demo
+df -h | grep lvm-demo
+
+## Extend LV and grow filesystem later
+lvresize --size +2G ubuntu-vg/ubuntu-lv
+resize2fs /dev/ubuntu-vg/ubuntu-lv
+df -h | grep lvm-demo
+

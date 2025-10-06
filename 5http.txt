@@ -1,0 +1,11 @@
+# Method 5: HTTP (simple one-off transfer)
+# On Sender VM:
+mkdir -p ~/httpfileshare
+cd ~/httpfileshare
+echo "Hello from VM1" > httpfile.txt
+python3 -m http.server 8080
+
+# On Receiver VM:
+wget http://SENDER_IP:8080/httpfile.txt
+cat httpfile.txt
+
