@@ -12,6 +12,18 @@ sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-ut
 # If on older Ubuntu and the above fails, also try:
 sudo apt-get install -y libvirt-bin || true
 
+
+Sudo nano /etc/libvirt/libvirt.conf
+
+listen_addr="0.0.0.0"
+unix_sock_group="libvirt"
+unix_sock_ro_perms="0777"
+unix_sock_rw_perms="0777"
+unix_sock_dir="/var/run/libvirt"
+unix_sock_ro_perms="0777"
+auth_unix_ro="none"
+auth_unix_rw="none"
+
 # 2) Enable services and group membership
 sudo systemctl enable --now libvirtd || sudo systemctl enable --now libvirt-bin
 sudo usermod -aG kvm,libvirt $USER
